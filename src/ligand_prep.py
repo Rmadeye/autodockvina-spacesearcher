@@ -11,10 +11,10 @@ class LigandPreparer:
 
     def prepare_ligand(self):
         url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{}/SDF'.format(self.ligand)
-        urllib.request.urlretrieve(url, '{}'.format(self.ligand + '.sdf'))
-        os.system('obabel {} -O {} --gen3d'.format(self.ligand+'.sdf', self.ligand + 'prep.pdb'))
-        os.system('obminimize -ff GAFF {} > {}'.format(self.ligand + 'prep.pdb', self.ligand + '.pdb'))
-        os.system(prepare_ligand_path + '{}'.format(self.ligand + '.pdb'))
+        urllib.request.urlretrieve(url, '{}'.format(self.ligand + '.sdf')) # downloads the file
+        os.system('obabel {} -O {} --gen3d'.format(self.ligand+'.sdf', self.ligand + 'prep.pdb')) # generates 3d coords
+        os.system('obminimize -ff GAFF {} > {}'.format(self.ligand + 'prep.pdb', self.ligand + '.pdb')) # minimizes using GAFF
+        os.system(prepare_ligand_path + '{}'.format(self.ligand + '.pdb')) # adds charges, sets rotatable bonds
         try:
             shutil.move(self.ligand+'.sdf', './ligand_sdfs/')
             shutil.move(self.ligand+'.pdbqt', './ligand_pdbqts/')
