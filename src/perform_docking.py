@@ -34,12 +34,12 @@ class VinaDocker:
                                                                size_x,
                                                                size_y,
                                                                size_z,
-                                                               self.ligand+'_docking_log',
-                                                               self.ligand+'.out'))
+                                                               self.protein.split('.')[0]+'_'+self.ligand+'_docking_log',
+                                                               self.protein.split('.')[0]+'_'+self.ligand+'.out'))
         try: # cleaning
-            shutil.move(self.ligand+'.out','./results/')
-            shutil.move(self.ligand+'_docking_log', './results/')
+            shutil.move(self.protein.split('.')[0]+'_'+self.ligand+'.out','./results/')
+            shutil.move(self.protein.split('.')[0]+'_'+self.ligand+'_docking_log', './results/')
         except Exception as e:
             print(e)
-            os.remove(self.ligand+'.out')
-            os.remove(self.ligand+'_docking_log')
+            os.remove(self.protein.split('.')[0]+'_'+self.ligand+'.out')
+            os.remove(self.protein.split('.')[0]+'_'+self.ligand+'_docking_log')
