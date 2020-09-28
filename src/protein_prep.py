@@ -14,20 +14,20 @@ class ResSelect(Select):
 
 class ProteinPreparer:
 
-    def __init__(self, protein: str):
+    def __init__(self, protein: str, dir: str):
         self.protein = protein
-        self.filename = './raw_ents/pdb{}.ent'.format(self.protein)
+        self.tmpdir = dir
+        self.filename = self.tmpdir + '/pdb{}.ent'.format(self.protein)
 
     def prepare_protein(self):
         parser = PDBParser()
         io = PDBIO()
-        PDBList().retrieve_pdb_file(pdb_code=self.protein, pdir='./raw_ents/', file_format='pdb') # saves pdb in a form of ent file
+        PDBList().retrieve_pdb_file(pdb_code=self.protein, pdir=self.tmpdir,
+                                    file_format='pdb')  # saves pdb in a form of ent file
         ipdb = parser.get_structure('ipdb', self.filename)  # Input pdb as a self.filename
         io.set_structure(ipdb)  # Setting structure for input pdb
-        io.save('./prepared_protein_pdbs/'+self.protein+'.pdb', ResSelect(), preserve_atom_numbering=True) # saves the cleaned pdb
-        os.system(prepare_protein_path + './prepared_protein_pdbs/{}.pdb'.format(self.protein)) # prepares the structure by adding polar hydrogens and adding gesteiger charges
-        try: # cleaning
-            shutil.move(self.protein+'.pdbqt','./protein_pdbqts/')
-        except Exception as e:
-            print(e)
-            os.remove(self.protein+'.pdbqt')
+        io.save(self.tmpdir + '/'+self.protein + '.pdb', ResSelect(),
+                preserve_atom_numbering=True)  # saves the cleaned pdb
+        os.system(prepare_protein_path + self.tmpdir + '/{}.pdb'.format(
+            self.protein))  # prepares the structure by adding polar hydrogens and adding gesteiger charges
+        shutil.move(self.protein + '.pdbqt', self.tmpdir)

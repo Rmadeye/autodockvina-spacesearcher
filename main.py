@@ -1,32 +1,28 @@
 #!/usr/bin/env python3
 from src import protein_prep, ligand_prep, perform_docking
-import os, time, argparse
+import os, tempfile
+
 home = os.path.expanduser("~")
 
 
-def execute(protein_ids: list, ligand_id: str):
-    assert (os.path.isdir(home + '/MGLTools-1.5.6')), "AutoDockTools not found! Script stopped" # check if mgltools are present
-    ligand_prep.LigandPreparer(ligand_id).prepare_ligand() # prepare ligand
-    for protein in protein_ids:
-        protein_prep.ProteinPreparer(protein).prepare_protein() # prepare protein
-        perform_docking.VinaDocker(
-            protein, ligand_id
-        ).prepare_docking_grid_and_dock()
+def execute(PDB_list: list, CID_list: list):
+    assert (os.path.isdir(
+        home + '/MGLTools-1.5.6')), "AutoDockTools not found! Script stopped"  # check if mgltools are present
 
-# start = time.time()
-#
-# inputdata = argparse.ArgumentParser(description="Process docking files")
-#
-# inputdata.add_argument('-ip', '--protein-pdb', nargs='*',
-#                        help="Input protein entry from PDB", required=True, type=str)
-# inputdata.add_argument('-il', '--ligand-cid', nargs='*',
-#                        help="Input ligand CID PubChem entry", required=True, type=str)
-# args = inputdata.parse_args()
-#
-# run = execute(args.protein_pdb[0], args.ligand_cid[0])
+    for CID_entry in CID_list:
+        with tempfile.TemporaryDirectory(dir=os.getcwd()) as tmpdir:
+            ligand_prep.LigandPreparer(CID_entry, dir=tmpdir).prepare_ligand()
+            for PDB_entry in PDB_list:
+                protein_prep.ProteinPreparer(PDB_entry, dir=tmpdir).prepare_protein()
+                perform_docking.VinaDocker(protentry=PDB_entry,
+                                           ligentry=CID_entry,
+                                           protein_pdbqt=tmpdir + '/' + PDB_entry,
+                                           ligand_pdbqt=tmpdir + '/' + CID_entry,
+                                           dir=tmpdir
+                                           ).dock_merge_plip()
 
 
 if __name__ == '__main__':
-    ligand = '11234'
-    proteins = ['4pxz','1llp']
+    ligand = ['11234', '666']
+    proteins = ['4pxz', '1llp', '1svk']
     execute(proteins, ligand)
