@@ -7,6 +7,7 @@ class VinaDocker:
 
     def __init__(self, ligentry: str, protentry: str, protein_pdbqt: str, ligand_pdbqt: str, dir: str):
         self.protein = protein_pdbqt + '.pdbqt'
+        self.protpdb = protentry + '.pdb'
         self.protname = os.path.basename(self.protein)
         self.ligand = ligand_pdbqt + '.pdbqt'
         self.ligname = os.path.basename(self.ligand)
@@ -16,7 +17,7 @@ class VinaDocker:
         self.complex_name = protentry + '_' + ligentry + '_cplx.pdb'
 
     def dock_merge_plip(self):
-        df = PandasPdb().read_pdb(self.protein)  # opens protein to calculate grid
+        df = PandasPdb().read_pdb(self.tmpdir + '/' + self.protpdb)  # opens protein to calculate grid
         minx = df.df['ATOM']['x_coord'].min()
         maxx = df.df['ATOM']['x_coord'].max()
         cent_x = round((maxx + minx) / 2, 2)
@@ -29,6 +30,11 @@ class VinaDocker:
         maxz = df.df['ATOM']['z_coord'].max()
         cent_z = round((maxz + minz) / 2, 2)
         size_z = round(abs(maxz - minz) + 3, 2)
+        assert (type(cent_x) != None), "Protein structure is damaged"
+        assert (type(cent_y) != None), "Protein structure is damaged"
+        assert (type(cent_z) != None), "Protein structure is damaged"
+
+
         print("Center point of docking grid for {} is as follows: "
               "x: {}, y: {}, z: {}".format(self.protein, size_x, size_y, size_z))
         print("Sizes of docking grid are as follows:"
@@ -64,8 +70,4 @@ class VinaDocker:
         except:
             pass
         shutil.move(self.complex_name, './results')
-
-
-
-
 

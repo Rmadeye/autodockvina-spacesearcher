@@ -1,7 +1,7 @@
 from Bio.PDB import *
 import os, shutil
 #set preparation pathways
-prepare_protein_path = '~/MGLTools-1.5.6/bin/pythonsh ~/MGLTools-1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -A bonds_hydrogens -U nphs_lps_waters_nonstdres -r'
+prepare_protein_path = '~/MGLTools-1.5.6/bin/pythonsh ~/MGLTools-1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py -A bonds_hydrogens -U nphs_lps_waters_nonstdres_deleteAltB -r'
 
 """Class inheriting from Select checking if the residue is aminoacid"""
 class ResSelect(Select):
