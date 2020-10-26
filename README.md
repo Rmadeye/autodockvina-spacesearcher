@@ -1,6 +1,6 @@
 # autodockvina-spacesearcher
 Python3 script downloading a protein by its PDB ID, a ligand by its CID from
-PubChem database, preparing the structures and performing space-search docking using AutoDockVina.
+PubChem database, preparing the structures and performing space-search (blind) docking using AutoDockVina.
 # Installation
 1. Clone this repository:
 ```
