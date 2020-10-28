@@ -23,6 +23,6 @@ def execute(PDB_list: list, CID_list: list):
 
 
 if __name__ == '__main__':
-    ligand = ['CCN1c2ccccc2Cc3c(O)ncnc13']
-    proteins = ['3e4e']
+    ligand = ['O=C(O)COc1c(Cl)c(Cl)c(cc1)C(=O)C(=C)CC']
+    proteins = ['1gsf']
     execute(proteins, ligand)
